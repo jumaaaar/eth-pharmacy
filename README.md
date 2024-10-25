@@ -1,5 +1,5 @@
 
-# Ethereal Phamarcy Job 
+# Phamarcy Job 
 
 * Simple pharmacy Job for ESX 
 * OX Inventory Ready
