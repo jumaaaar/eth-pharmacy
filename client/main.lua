@@ -102,7 +102,7 @@ end)
 RegisterNetEvent('eth-pharmacy:GetPrescriptions')
 AddEventHandler('eth-pharmacy:GetPrescriptions', function(inventory, slot , itemMetaData)
     if lib.progressBar({
-        duration = 25000,  -- Adjust duration to simulate time to get something from the cabinet
+        duration = 25000, 
         label = 'Getting medicine from cabinet',
         useWhileDead = false,
         canCancel = true,
@@ -110,8 +110,8 @@ AddEventHandler('eth-pharmacy:GetPrescriptions', function(inventory, slot , item
             car = true,
         },
         anim = {
-            dict = 'mp_common',  -- Animation dictionary for reaching out
-            clip = 'givetake1_a'  -- Animation clip for giving/taking action
+            dict = 'mp_common', 
+            clip = 'givetake1_a'  
         }
     }) then 
         TriggerServerEvent('eth-pharmacy:ReceivePrescriptions' , inventory , slot ,itemMetaData)
@@ -149,9 +149,8 @@ AddEventHandler('eth-pharmacy:cashierActions', function(object)
         
         if not inputData then return end
         
-        local label = inputData[1] -- First input (Receipt Label)
-        local amount = tonumber(inputData[2]) -- Second input (Receipt Amount)
-        
+        local label = inputData[1] 
+        local amount = tonumber(inputData[2])
         TriggerServerEvent('eth-pharmacy:addCashierBill', amount, label) 
     elseif object.action == "ReceiptMenu" then     
         local SendMenu = {
@@ -300,6 +299,26 @@ function OpenReceiptMenu(shop)
     lib.showContext('receipt_menu')
 end
 
+-- -- Blips Creation
+Citizen.CreateThread(function()
+    -- Ensure the MedicineCabinet location and position are defined in the configuration
+    if Config.Pharmacy and Config.Pharmacy.Locations["MedicineCabinet"] and Config.Pharmacy.Locations["MedicineCabinet"].pos then
+        local blipPos = Config.Pharmacy.Locations["MedicineCabinet"].pos
+        local blip = AddBlipForCoord(blipPos.x, blipPos.y, blipPos.z)
+        
+        -- Set up the blip's appearance and behavior
+        SetBlipSprite(blip, 403) 
+        SetBlipScale(blip, 0.6) 
+        --SetBlipAsShortRange(blip, true) 
+        SetBlipColour(blip, 3)  
+        
+        BeginTextCommandSetBlipName("STRING")
+        AddTextComponentString("Pharmacy") 
+        EndTextCommandSetBlipName(blip)
+    else
+        print("Error: Pharmacy location or position not defined in Config.")
+    end
+end)
 
 
 ---- NOTIFY 
